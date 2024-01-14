@@ -20,6 +20,12 @@ On Windows:
 setx OPENAI_API_KEY="..."
 ```
 
-Then, you should be all set to test out this code! 
+Then, you should be all set to test out this code! Each folder's code has a respective readme which can help you learn more about the project. Please feel free to contribute. 
+
+To test the code, you can run any of the examples like `networking-team.py` or `documentation-team.py` with the activated environment
+
+---
+
+If you are interested in contacting me, my email is `snbafana@gmail.com`
 
 
