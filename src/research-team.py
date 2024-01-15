@@ -8,7 +8,7 @@ from Actors.Agent import Agent, Assistant, Developer
 from Actors.User import User
 import re
 import asyncio
-from Tools.ToolForge import CreateDirective, SearchWeb, LinkSearch, SiteScraper
+from Tools.ToolForge import CreateDirective, SearchWebDDGS, LinkSearch, SiteScraper
 from Tools.ToolForge import ExecuteCommand, CreateFile, Program, GetFilesInDirectory, OpenFile, CreateDir, Research
 comm:Schema = Schema()
 
@@ -24,7 +24,7 @@ research_node1 = ChatOne(actor = Assistant(name='Research Agent',
                                         Return all the information you gained like links, web info, and most specifically website content. Function call concisely, as little as possible. 
                                         But you must do it. Cite all sources, and query with relevance. Do not ask for any advice. Just execute all the research you can do, navigate as many website, and return all your information""",
                         description="Responsible for searching the web and pulling information",
-                        functions=[SearchWeb]),
+                        functions=[SearchWebDDGS]),
                         comm=comm)
 
 research_node2 = ChatOne(actor = Assistant(name='Research Agent', 
@@ -33,7 +33,7 @@ research_node2 = ChatOne(actor = Assistant(name='Research Agent',
                                         Return all the information you gained like links, web info, and most specifically website content. Function call concisely, as little as possible. 
                                         But you must do it. Cite all sources, and query with relevance. Do not ask for any advice. Just execute all the research you can do, navigate as many website, and return all your information""",
                         description="Responsible for searching the web and pulling information",
-                        functions=[SearchWeb]),
+                        functions=[SearchWebDDGS]),
                         comm=comm)
 
 

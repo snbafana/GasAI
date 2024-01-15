@@ -5,7 +5,7 @@ from Communications.Schema import Schema
 from Communications.Chats import Chat, ChatOne
 from Actors.Agent import Agent, Assistant, Developer
 from Actors.User import User
-from Tools.ToolForge import SearchWeb
+from Tools.ToolForge import SearchWebDDGS
 from Tools.ToolForge import ExecuteCommand, CreateFile, Program, GetFilesInDirectory, OpenFile, CreateDir
 from Tools.ToolImporter import ToolImporter
 
@@ -17,7 +17,7 @@ user = User()
 research_agent:Agent= Assistant(name='Research Agent', 
                         instructions="""You are the Research Agent, with the following purpose. Call the research methods and return information""",
                         description="Responsible for searching the web and pulling information",
-                        functions=[SearchWeb])
+                        functions=[SearchWebDDGS])
 
 
 file_agent:Agent= Developer(name='File Agent', 

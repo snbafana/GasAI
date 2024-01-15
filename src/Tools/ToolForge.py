@@ -214,16 +214,25 @@ class OpenFile(OpenAISchema):
 
 from duckduckgo_search import DDGS
 
-class SearchWeb(OpenAISchema):
+class SearchWebDDGS(OpenAISchema):
     """Search the web with a search phrase and return the results."""
 
     phrase: str = Field(..., description="The search phrase you want to use. Optimize the search phrase for an internet search engine.")
 
     # This code will be executed if the agent calls this tool
     async def run(self):
-    #   with DDGS() as ddgs:
-    #     return str([r for r in ddgs.text(self.phrase, max_results=3)])
+      with DDGS() as ddgs:
+        return str([r for r in ddgs.text(self.phrase, max_results=3)])
+    
+class SearchWebGOOGLE(OpenAISchema):
+    """Search the web with a search phrase and return the results."""
+
+    phrase: str = Field(..., description="The search phrase you want to use. Optimize the search phrase for an internet search engine.")
+
+    # This code will be executed if the agent calls this tool
+    async def run(self):
         return search(self.phrase)
+
     
 class CreateDirective(OpenAISchema):
     """Take in user input and create a directive with the breakdown of goals and additional information. Be as specific as possible. Remember that user does not have access to the output of this function. You must send it back to him after execution."""
