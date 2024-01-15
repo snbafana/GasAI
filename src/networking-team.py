@@ -2,7 +2,7 @@ import sys
 sys.path.append('../')
 from Communications import Schema, Chat,ChatOne
 from Actors import Developer, Assistant, User
-from Tools import SearchWeb, CreateFile, GetFilesInDirectory
+from Tools import SearchWeb, CreateFile, GetFilesInDirectory, SiteScraper, LinkedINSearch
 comm:Schema = Schema()
 
 swarm_goal = 'To answer to the users needs in all forms of information gathering, email and file writing, and networking/meeting aid'
@@ -17,7 +17,7 @@ research_node = ChatOne(actor = Assistant(name='Research Agent',
                                         Return all the information you gained like links, web info, and most specifically website content. Function call concisely, as little as possible. 
                                         But you must do it. Cite all sources, and query with relevance. Do not ask for any advice. Just execute all the research you can do, navigate as many website, and return all your information""",
                         description="Responsible for searching the web and pulling information",
-                        functions=[SearchWeb]),
+                        functions=[SearchWeb, SiteScraper, LinkedINSearch]),
                         comm=comm)
 
 file_node = ChatOne(actor = Assistant(name='File Agent', 
@@ -33,7 +33,7 @@ file_node = ChatOne(actor = Assistant(name='File Agent',
                     comm=comm)
 
 
-comm.enable_auto_splitting()
+# comm.enable_auto_splitting()
 
 
 user > research_node > file_node

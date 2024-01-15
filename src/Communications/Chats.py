@@ -88,6 +88,8 @@ class Chat(Node):
                 async for m in self.deciders['main'].send_message_gen(usermessage):
                     message = m
                     print(m)
+                    print('_'*15)
+
             
         else:
             assistantid = 0
@@ -97,9 +99,12 @@ class Chat(Node):
             # print(self.actors[assistantid])
             async for m in self.actors[assistantid].send_message_gen(message):
                     print(m)
+                    print('_'*15)
                     message = m
             async for m in await self.deciders['main'].send_message_gen(message):
                     print(m)
+                    print('_'*15)
+
                     message = m
 
         return message
@@ -243,10 +248,11 @@ class ChatOne(Node):
         while usermessage != "stop":
             async for m in User().send_message_gen():
                 usermessage = m
-            print(usermessage)
             async for m in self.get_node_completion_gen(usermessage):
                 message = m
                 print(m)
+                print('_'*15)
+
                 
                 if self.outs_to_file:
                     self.save_message_to_file(m)

@@ -34,8 +34,8 @@ def preprocess(text:str) -> str:
     return remove_non_utf8_characters(text)
 
 
-def search(query) -> list[dict[str, str]]:
-    API_KEY = 'AIzaSyB7y5DwBdZdJQaW15-uPGtSxWok-8FF2qs'
+def search(query) -> str:
+    API_KEY = os.environ['GOOGLESEARCH_API_KEY']
     SEARCH_ENGINE_ID = '226631df8b46341cd'
     start=0
 
@@ -70,7 +70,7 @@ def search(query) -> list[dict[str, str]]:
         final.append({'title':title, 'snippet':snippet, 'long_description': long_description, 'link':link})
         # print the results
 
-    return final
+    return str(final)
 
 def scrape(url)->str:
     
@@ -221,8 +221,9 @@ class SearchWeb(OpenAISchema):
 
     # This code will be executed if the agent calls this tool
     async def run(self):
-      with DDGS() as ddgs:
-        return str([r for r in ddgs.text(self.phrase, max_results=3)])
+    #   with DDGS() as ddgs:
+    #     return str([r for r in ddgs.text(self.phrase, max_results=3)])
+        return search(self.phrase)
     
 class CreateDirective(OpenAISchema):
     """Take in user input and create a directive with the breakdown of goals and additional information. Be as specific as possible. Remember that user does not have access to the output of this function. You must send it back to him after execution."""

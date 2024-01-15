@@ -61,7 +61,7 @@ dev_assistant:Assistant= Assistant(name='Assistant Agent',
                         description="responsible for communicating the project vision. After the goal is completed, this bot will end the chats",
                         functions=[])
 
-dev_team = Chat(actors=[dev_assistant, research_agent, dev_agent, file_agent], name="Multipurpose Team", purpose="To meet the users needs, whatever they may be", comm=comm)
+dev_team = Chat(actors=[dev_assistant, dev_agent, file_agent], name="Multipurpose Team", purpose="To meet the users needs, whatever they may be", comm=comm)
 
 
 dev_team.startup()

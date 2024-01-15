@@ -115,7 +115,7 @@ class Agent(Actor):
                 tool_outputs = []
 
                 for tool_call in tool_calls:
-                    func_name = f'{self.name}\n ' + str(tool_call.function)
+                    func_name = f'{self.name}\n ' + str(tool_call.function) + '\n'
                     yield func_name
                     func_output = ''
                     func = next(func for func in self.functions if func.__name__ == tool_call.function.name)

@@ -219,12 +219,15 @@ class Schema:
             if len(connected_nodes) > 1 or (isinstance(node.actors[0], User) and self.autosplitting):
                 async for m in node.get_node_completion_gen(message, threadname=threadname):
                     print(m + '\n')
+                    print('_'*15)
+
                     message = m
                 
                 splitter = self.create_spliter(connected_nodes)
                 splittermsg = ""
                 async for s in splitter.get_node_completion_gen(message, threadname=threadname):
                     print(s + '\n')
+                    print('_'*15)
                     splittermsg = s
                                                 
                 active_generators = splitter.agent.get_splitter_tasks()
@@ -240,6 +243,7 @@ class Schema:
                                 pass
                             else:
                                 print(gen, " : ", value)
+                                print('_'*15)
                                 gen_messages[i] = value
                         except StopAsyncIteration:
                             active_generators.remove(gen)
@@ -253,6 +257,7 @@ class Schema:
             else:  
                 async for m in node.get_node_completion_gen(message, threadname=threadname):
                     print(message)
+                    print('_'*15)
                     message = m
                     
                 if connected_nodes != []:    
