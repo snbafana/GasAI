@@ -103,6 +103,9 @@ class Chat(Node):
                     message = m
 
         return message
+    
+    def startup(self):
+        asyncio.run(self.start_chat())
 
     def demo_gradio(self, height=600): 
         """
