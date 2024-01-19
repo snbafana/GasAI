@@ -5,7 +5,6 @@ import asyncio
 import time
 import inspect
 import logging
-from .Actor import Actor
 from typing import AsyncGenerator
 from typing_extensions import Self
 import os
@@ -17,7 +16,7 @@ logging.basicConfig(encoding='utf-8', level=logging.WARNING)
 # OpenAI client initialization with API key
 client = OpenAI(api_key=os.environ['OPENAI_API_KEY'])
 
-class Agent(Actor):
+class Agent():
     """An Agent class that extends Actor for interaction with OpenAI's API.
 
     This class manages the lifecycle of agents including creation, message sending,
@@ -32,7 +31,7 @@ class Agent(Actor):
         threads (dict): Dictionary to manage threads for asynchronous operations.
     """
 
-    def __init__(self, name: str, instructions: str, description: str, functions: List[OpenAISchema] = [], model: str = "gpt-4-1106-preview", **kwargs) -> None:
+    def __init__(self, name: str, instructions: str, description: str, functions: List[OpenAISchema] = [], model: str = "gpt-4-1106-preview", id=0, **kwargs) -> None:
         """
         Initialize an Agent instance.
 
@@ -50,6 +49,7 @@ class Agent(Actor):
         self.instructions = instructions
         self.description = description
         self.threads = {}
+        self.id = id
 
 
 

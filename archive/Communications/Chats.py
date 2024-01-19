@@ -1,10 +1,11 @@
 
-from Actors import User, Assistant
+from Nodes import User, Assistant
+from Nodes.UtilityAgents import Splitter, Joiner
 from .Node import Node
-from Actors import Decider
+from Nodes import Decider
 import asyncio
 import re
-from typing import AsyncGenerator
+from typing import AsyncGenerator, List, Literal
 import logging 
 
 logger = logging.getLogger(__name__)
@@ -259,3 +260,62 @@ class ChatOne(Node):
     
     def startup(self):
         asyncio.run(self.start_chat())
+        
+     
+class UtilityNode(Node):
+    
+    def __init__(self, placetype:type, id) -> None:
+        self.placetype:type = placetype
+        self.id = id
+
+    def __repr__(self) -> str:
+        """
+        Returns a string representation of the Node.
+
+        Returns:
+            str: A string representation, showing the name of the node.
+        """
+        return f"{self.placetype} Utility Node"
+
+        
+        
+    def build_splitter(self, out:list[Node]) -> ChatOne:
+        """
+        Creates a splitter agent to delegate tasks among multiple nodes.
+
+        Args:
+            out (list[Node]): A list of output nodes to which tasks will be delegated.
+
+        Returns:
+            ChatOne: A ChatOne instance representing a chat with the splitter agent.
+
+        This method creates a Splitter agent that takes an input message and delegates tasks
+        among the provided output nodes. If there is only one output node, tasks are split
+        equally among the same group of agents. For multiple output nodes, tasks are split
+        according to their descriptions.
+        """
+        descriptions = {i:{"name":o.name, "description": o.purpose, "node":o} for i, o in enumerate(out)}
+        
+        splitter = Splitter(name=f"Splitter for {out}", descriptions=descriptions, out_nodes=out, comm=self.comm)
+        
+        # Create the splitting node
+        splitter_chat:ChatOne = ChatOne(actor=splitter, comm=self.comm)
+        
+        # Return the splittting Node
+        return splitter_chat
+
+    def build_joiner(self):
+        joiner = Joiner(name=f"Joiner", comm=self.comm)
+        
+        # Create the splitting node
+        joiner_chat:ChatOne = ChatOne(actor=joiner, comm=self.comm)
+        
+        # Return the splittting Node
+        return joiner_chat
+        
+    
+        
+def SplitJoinPair(id=0):
+    return UtilityNode(placetype=Splitter, id=id, ), UtilityNode(placetype=Joiner, id=id)
+
+    

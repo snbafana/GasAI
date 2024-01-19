@@ -2,8 +2,8 @@ from Nodes.User import User
 import networkx as nx
 import matplotlib.pyplot as plt
 from Nodes.UtilityAgents import Splitter, Joiner
-from Nodes.Node import Node
-from Nodes.Chats import Chat, UtilityNode
+from .Node import Node
+from .Chats import ChatOne, UtilityNode
 import itertools
 import logging
 import asyncio
@@ -188,12 +188,12 @@ class Schema:
                     
                     splitter = node.build_splitter(connected_nodes)
                     splittermsg = ""
-                    async for s in splitter.get_completion(message, threadname=threadname):
+                    async for s in splitter.get_node_completion_gen(message, threadname=threadname):
                         print(s + '\n')
                         print('_'*15)
                         splittermsg = s
                                                     
-                    active_generators = splitter.get_splitter_tasks()
+                    active_generators = splitter.agent.get_splitter_tasks()
                     gen_messages = ["" for i in active_generators]
                     final_nodes = []
                     print("Generators: ", active_generators)
@@ -225,7 +225,7 @@ class Schema:
                 elif node.placetype == Joiner:
                     
                     joiner = node.build_joiner()
-                    async for s in joiner.get_completion(message, threadname=threadname):
+                    async for s in joiner.get_node_completion_gen(message, threadname=threadname):
                         print(s + '\n')
                         print('_'*15)
                         message = s
@@ -237,7 +237,7 @@ class Schema:
                     
             
             else:  
-                async for m in node.get_completion(message, threadname=threadname):
+                async for m in node.get_node_completion_gen(message, threadname=threadname):
                     print(message)
                     print('_'*15)
                     message = m
@@ -268,7 +268,7 @@ class Schema:
         while connected_nodes != []:
             connected_nodes = self.get_connected_nodes(node)
               
-            async for m in node.get_completion(message, threadname=threadname):
+            async for m in node.get_node_completion_gen(message, threadname=threadname):
                 message = m
                 yield m
             

@@ -2,7 +2,9 @@ import sys
 sys.path.append('../')
 
 from Communications.Schema import Schema
-from Nodes import  Developer, Assistant, User, SplitJoinPair, Chat, Agent
+from Communications.Chats import Chat, ChatOne
+from Nodes.Agent import Agent, Assistant, Developer
+from Nodes.User import User
 from Tools.ToolForge import SearchWebDDGS
 from Tools.ToolForge import ExecuteCommand, CreateFile, Program, GetFilesInDirectory, OpenFile, CreateDir
 from Tools.ToolImporter import ToolImporter
@@ -10,7 +12,7 @@ from Tools.ToolImporter import ToolImporter
 comm:Schema = Schema()
 
 
-user = User(comm=comm)
+user = User()
 
 research_agent:Agent= Assistant(name='Research Agent', 
                         instructions="""You are the Research Agent, with the following purpose. Call the research methods and return information""",
@@ -59,3 +61,6 @@ dev_assistant:Assistant= Assistant(name='Assistant Agent',
                         description="responsible for communicating the project vision. After the goal is completed, this bot will end the chats",
                         functions=[])
 
+# dev_team = Chat(actors=[dev_assistant, dev_agent], name="Multipurpose Team", purpose="To meet the users needs, whatever they may be", comm=comm)
+
+ChatOne(actor=dev_agent, comm=comm).startup()

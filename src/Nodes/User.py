@@ -1,25 +1,25 @@
-from .Actor import Actor
 from typing import AsyncGenerator
+from .Node import Node
 
-class User(Actor):
+class User(Node):
     """
     Represents a user in the system, inheriting from the Actor class.
 
     This class is responsible for handling user-specific actions, such as sending messages.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, name="User", description="User that provides human input", **kwargs):
         """
         Initializes the User object.
 
         Args:
             **kwargs: Arbitrary keyword arguments passed to the Actor's constructor.
         """
-        self.name = 'User'
-        self.description = 'User that provides input'
-        super().__init__(**kwargs)
+        self.name = name
+        self.description = description
+        super().__init__(name=name, description=description, **kwargs)
     
-    async def send_message_gen(self, *args, **kwargs) -> AsyncGenerator[str, None]:
+    async def get_completion(self, *args, **kwargs) -> AsyncGenerator[str, None]:
         """
         Asynchronously sends a message and yields the user's response.
 

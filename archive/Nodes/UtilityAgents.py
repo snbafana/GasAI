@@ -1,7 +1,6 @@
 from typing import List
 from instructor import OpenAISchema
 from .Agent import Agent
-from .Actor import Actor
 from .User import User
 from instructor import OpenAISchema
 from pydantic import Field
@@ -118,17 +117,20 @@ class Decider(Agent):
         return GetUserInput
         
 class Splitter(Agent):
-    def __init__(self, name:str, descriptions, out_nodes, comm, model: str = "gpt-4-1106-preview", **kwargs) -> None:
+    def __init__(self, name:str, descriptions, out_nodes, comm, model: str = "gpt-4-1106-preview", id=0, **kwargs) -> None:
         self.name=name 
+        self.id = id
         
         stringlist = "\n".join([f"{num}. {values['name']} - {values['description']}" for num, values in descriptions.items()])
         
         
         instructions=f"""You are a Splitter Agent. 
         Based on the provided message, split the information into messages for the recipient agents, so they can execute their tasks. If there is only one recipent agent, split the information into all the subgoals that can be accomplished, 
-        so multiple versions of the recipient agent can work together. 
+        so multiple versions of the recipient agent can work together. These tasks will be called simultaneously, and they cannot talk to one another. Do not assign dependent tasks. 
         The goal will be provided. Here are the following agents you can select from. Use the function calling to split up the message for the agents. That is all you have to do. IMPORTANT: Do not call functions more than once.
         Include thorough explanations of the goals, and return those goals. As much info as possible 
+        
+        Call Splitter only ONCE
 
         {stringlist}
 
@@ -183,7 +185,7 @@ class Splitter(Agent):
                     tasks[splitterself.name] = []
 
                     for message in self.messages:
-                        tasks[splitterself.name].append(outerself.singular_system_pass(message, starting_node=out[0], threadname=message))
+                        tasks[splitterself.name].append(outerself.singular_system_pass(message, starting_node=out[0], threadname=message, splitter_id=splitterself.id))
                 
                     return 'Task Delegation Complete' 
             return Splitter
@@ -205,7 +207,7 @@ class Splitter(Agent):
                     tasks[splitterself.name] = []
 
                     for node, message in dic.items():
-                        tasks[splitterself.name].append(outerself.singular_system_pass(message, starting_node=node, threadname=message))
+                        tasks[splitterself.name].append(outerself.singular_system_pass(message, starting_node=node, threadname=message, splitter_id=splitterself.id))
                 
                     return "Task Delegation Complete" 
             return Splitter
@@ -214,8 +216,23 @@ class Splitter(Agent):
         return tasks[self.name]
     
 class Joiner(Agent):
-    def __init__(self, name: str, instructions: str, description: str, functions: List[OpenAISchema] = ..., model: str = "gpt-4-1106-preview", **kwargs) -> None:
-        super().__init__(name, instructions, description, functions, model, **kwargs)
+    def __init__(self, name, comm, model: str = "gpt-4-1106-preview", id=0, **kwargs) -> None:
+        
+        self.id = id
+        
+        self.name=name    
+        
+        instructions=f"""You are the joiner agent, created in response to the tasks created by the splitter agent. Your role is to join a set of chat histories back together. 
+        Maintain as much info as possible and as much specificity as possible. Do not lose any information. However, do not add any extra information. Only use what was provided to you
+        """
+        
+        description="Joins content from multiple speakers"
+                
+        functions=[]
+        
+        super().__init__(self.name, instructions, description, functions, model, **kwargs)
+        self.create_openai_agent()
+        
         
 class GoalMaker(Agent):
     def __init__(self, name: str, instructions: str, description: str, functions: List[OpenAISchema] = ..., model: str = "gpt-4-1106-preview", **kwargs) -> None:

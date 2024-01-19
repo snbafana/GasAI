@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from typing import List
-from Actors.Actor import Actor
 from typing import AsyncGenerator
 import os
 
@@ -17,7 +16,7 @@ class Node(ABC):
         purpose (str): The purpose or function of the node within the network.
         comm(Schema): The communication network to which this node belongs.
     """
-    def __init__(self, actors: List[Actor], name: str, purpose: str, comm, outs_to_file=False) -> None:
+    def __init__(self, actors, name: str, purpose: str, comm=None, outs_to_file=False) -> None:
         """
         Initializes a new Node instance.
 
@@ -39,8 +38,6 @@ class Node(ABC):
             self.comm.add_node(self)
             
     
-
-    @abstractmethod
     async def get_node_completion_gen(self, message: str)-> AsyncGenerator[str, None]:
         """
         An abstract method that must be implemented by subclasses.
@@ -102,6 +99,7 @@ class Node(ABC):
         if isinstance(other, Node):
             # Add an edge from self to other
             if other not in self.comm.nodes:
+                other.comm = self.comm
                 self.comm.add_node(other)
             self.comm.add_communication_path(self, other)
         return other

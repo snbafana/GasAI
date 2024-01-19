@@ -2,7 +2,9 @@ import sys
 sys.path.append('../')
 
 from Communications.Schema import Schema
-from Nodes import  Developer, Assistant, User, SplitJoinPair, Chat, Agent
+from Communications.Chats import Chat, ChatOne, SplitJoinPair
+from Nodes.Agent import Agent, Assistant, Developer
+from Nodes.User import User
 from Tools.ToolForge import SearchWebDDGS
 from Tools.ToolForge import ExecuteCommand, CreateFile, Program, GetFilesInDirectory, OpenFile, CreateDir
 from Tools.ToolImporter import ToolImporter
@@ -10,7 +12,7 @@ from Tools.ToolImporter import ToolImporter
 comm:Schema = Schema()
 
 
-user = User(comm=comm)
+user = User()
 
 research_agent:Agent= Assistant(name='Research Agent', 
                         instructions="""You are the Research Agent, with the following purpose. Call the research methods and return information""",
@@ -85,13 +87,13 @@ dev_assistant:Assistant= Assistant(name='Assistant Agent',
                         functions=[])
 
 
-dev_team = Chat(actors=[dev_agent, dev_assistant, test_agent], name="Dev Team", description="To build and test code that works for the users needs. Make sure that all the code that is being created follows with the code in the files that the user provided")
+dev_team = Chat(actors=[dev_agent, dev_assistant, test_agent], name="Dev Team", purpose="To build and test code that works for the users needs. Make sure that all the code that is being created follows with the code in the files that the user provided", comm=comm)
 
-prog_team = Chat(actors=[assistant, research_agent, file_agent], name="Research Team", description="Research and answer any of the users queries. These should be comprehensive. Provide links and sources for your work")
+prog_team = Chat(actors=[assistant, research_agent, file_agent], name="Research Team", purpose="Research and answer any of the users queries. These should be comprehensive. Provide links and sources for your work", comm=comm)
 
+u = ChatOne(actor=user, comm=comm)
 
-
-file_node = Assistant(name='File Agent', 
+file_node = ChatOne(actor = Assistant(name='File Agent', 
                         instructions=f"""You are the File Agent
                         You take in information and links from the research agent, and write a markdown report that summarizes all that was learned. Some questions to think about are: 
                         If the user asks to write a report, follow their guidelines exactly. Do not deviate from the command, and for these reports on individuals, follow the following guidelines:
@@ -100,13 +102,14 @@ file_node = Assistant(name='File Agent',
                         You can read and write files. Write files to the "Markdown Files files directory. If you cannot find it, then call getfilesindirectory to find it""",
                     
                         description="responsbile for reading and writing files, most specifically, writing the report files",
-                        functions=[CreateFile, GetFilesInDirectory])
+                        functions=[CreateFile, GetFilesInDirectory]), 
+                    comm=comm)
 
 s, j = SplitJoinPair()
 
-user > s
+u > s
 s > prog_team > j
 s > dev_team > j
 j > file_node
 
-comm.startup(starting_node=user)
+comm.startup(starting_node=u)
