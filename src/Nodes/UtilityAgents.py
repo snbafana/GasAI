@@ -134,7 +134,7 @@ class Splitter(Agent):
 
         {stringlist}
 
-        Produce 3 subgoals at max. Only call this function ONCE.
+        Produce 5 subgoals at max. Only call this function ONCE.
         """
         
         description="Splits content for multiple speakers"

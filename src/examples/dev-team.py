@@ -1,11 +1,6 @@
-import sys
-sys.path.append('../')
 
-from Communications.Schema import Schema
-from Nodes import  Developer, Assistant, User, SplitJoinPair, Chat, Agent
-from Tools.ToolForge import SearchWebDDGS
-from Tools.ToolForge import ExecuteCommand, CreateFile, Program, GetFilesInDirectory, OpenFile, CreateDir
-from Tools.ToolImporter import ToolImporter
+
+from context import *
 
 comm:Schema = Schema()
 

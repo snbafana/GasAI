@@ -1,8 +1,6 @@
-import sys
-sys.path.append('../')
-from Communications import Schema
-from Nodes import Developer, Assistant, User, SplitJoinPair
-from Tools import SearchWebGOOGLE, CreateFile, GetFilesInDirectory, SiteScraper, LinkedINSearch
+
+from context import *
+
 comm:Schema = Schema()
 
 swarm_goal = 'To answer to the users needs in all forms of information gathering, email and file writing, and networking/meeting aid'

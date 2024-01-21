@@ -1,0 +1,70 @@
+[{
+        "nodes": [
+            {
+                "id": "af31384f-b752-4346-a304-a32f8a8b7674",
+                "type": "agent",
+                "data": {
+                    "agentID": "af31384f-b752-4346-a304-a32f8a8b7674",
+                    "agentName": "Research Agent",
+                    "agentInstruction": "You are the Research Agent, with the following purpose. Call the research methods and return information",
+                    "agentDescription": "Responsible for searching the web and pulling information",
+                    "agentTools": [
+                        "SearchWebDDGS"
+                    ]
+                },
+                "position": {
+                    "x": -39.52000000000007,
+                    "y": 1.1000000000000227
+                },
+                "width": 356,
+                "height": 231,
+                "selected": true,
+                "positionAbsolute": {
+                    "x": -39.52000000000007,
+                    "y": 1.1000000000000227
+                },
+                "dragging": false
+            },
+            {
+                "id": "0afd706a-42b1-44b3-8a88-148b9c97678c",
+                "type": "agent",
+                "data": {
+                    "agentID": "0afd706a-42b1-44b3-8a88-148b9c97678c",
+                    "agentName": "Assistant Agent",
+                    "agentInstruction": "You are the Assistant Agent, with the following purpose. Communicate the plan and goal. If any Agent has any questions, please respond. Contextualize any plan provided to you. Keep this short and sweet.",
+                    "agentDescription": "responsible for communicating the project vision. After the goal is completed, this bot will end the chats",
+                    "agentTools": []
+                },
+                "position": {
+                    "x": 433.26000000000033,
+                    "y": -106.7
+                },
+                "width": 356,
+                "height": 295,
+                "selected": false,
+                "positionAbsolute": {
+                    "x": 433.26000000000033,
+                    "y": -106.7
+                },
+                "dragging": false
+            }
+        ],
+        "edges": [
+            {
+                "source": "af31384f-b752-4346-a304-a32f8a8b7674",
+                "sourceHandle": null,
+                "target": "0afd706a-42b1-44b3-8a88-148b9c97678c",
+                "targetHandle": null,
+                "id": "reactflow__edge-af31384f-b752-4346-a304-a32f8a8b7674-0afd706a-42b1-44b3-8a88-148b9c97678c",
+                "markerEnd": {
+                    "type": "arrowclosed"
+                }
+            }
+        ],
+        "viewport": {
+            "x": 33.179490750067,
+            "y": 215.1852296530771,
+            "zoom": 0.5428014486702679
+        }
+    }
+]

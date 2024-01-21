@@ -1,12 +1,8 @@
 import sys
 sys.path.append('../')
 
-from Communications.Schema import Schema
-from Nodes import  Developer, Assistant, User, SplitJoinPair, Chat, Agent, GoalMaker
-from Nodes.User import User
-import re
-import asyncio
-from Tools import CreateFile, Program, GetFilesInDirectory, OpenFile
+from context import *
+
 comm:Schema = Schema()
 
 swarm_goal = 'To read all the files in a particular set of folders and write documentation for each '
