@@ -1,70 +1,104 @@
-[{
-        "nodes": [
-            {
-                "id": "af31384f-b752-4346-a304-a32f8a8b7674",
-                "type": "agent",
-                "data": {
-                    "agentID": "af31384f-b752-4346-a304-a32f8a8b7674",
-                    "agentName": "Research Agent",
-                    "agentInstruction": "You are the Research Agent, with the following purpose. Call the research methods and return information",
-                    "agentDescription": "Responsible for searching the web and pulling information",
-                    "agentTools": [
-                        "SearchWebDDGS"
-                    ]
-                },
-                "position": {
-                    "x": -39.52000000000007,
-                    "y": 1.1000000000000227
-                },
-                "width": 356,
-                "height": 231,
-                "selected": true,
-                "positionAbsolute": {
-                    "x": -39.52000000000007,
-                    "y": 1.1000000000000227
-                },
-                "dragging": false
+{
+    "nodes": [
+        {
+            "id": "d50783a8-d89d-4361-a576-a190187eee53",
+            "type": "agent",
+            "data": {
+                "agentID": "d50783a8-d89d-4361-a576-a190187eee53",
+                "agentName": "USER",
+                "agentInstruction": "",
+                "agentDescription": "",
+                "agentTools": []
             },
-            {
-                "id": "0afd706a-42b1-44b3-8a88-148b9c97678c",
-                "type": "agent",
-                "data": {
-                    "agentID": "0afd706a-42b1-44b3-8a88-148b9c97678c",
-                    "agentName": "Assistant Agent",
-                    "agentInstruction": "You are the Assistant Agent, with the following purpose. Communicate the plan and goal. If any Agent has any questions, please respond. Contextualize any plan provided to you. Keep this short and sweet.",
-                    "agentDescription": "responsible for communicating the project vision. After the goal is completed, this bot will end the chats",
-                    "agentTools": []
-                },
-                "position": {
-                    "x": 433.26000000000033,
-                    "y": -106.7
-                },
-                "width": 356,
-                "height": 295,
-                "selected": false,
-                "positionAbsolute": {
-                    "x": 433.26000000000033,
-                    "y": -106.7
-                },
-                "dragging": false
-            }
-        ],
-        "edges": [
-            {
-                "source": "af31384f-b752-4346-a304-a32f8a8b7674",
-                "sourceHandle": null,
-                "target": "0afd706a-42b1-44b3-8a88-148b9c97678c",
-                "targetHandle": null,
-                "id": "reactflow__edge-af31384f-b752-4346-a304-a32f8a8b7674-0afd706a-42b1-44b3-8a88-148b9c97678c",
-                "markerEnd": {
-                    "type": "arrowclosed"
-                }
-            }
-        ],
-        "viewport": {
-            "x": 33.179490750067,
-            "y": 215.1852296530771,
-            "zoom": 0.5428014486702679
+            "position": {
+                "x": 250.0,
+                "y": 0.0
+            },
+            "width": 142,
+            "height": 123,
+            "selected": null,
+            "positionAbsolute": null,
+            "dragging": null
+        },
+        {
+            "id": "4c971443-b951-4466-b5df-92ec8f8299c2",
+            "type": "agent",
+            "data": {
+                "agentID": "4c971443-b951-4466-b5df-92ec8f8299c2",
+                "agentName": "Research Agent",
+                "agentInstruction": "You are the Research Agent, with the following purpose. Call the research methods and return information",
+                "agentDescription": "Responsible for searching the web and pulling information",
+                "agentTools": [
+                    "SearchWebDDGS"
+                ]
+            },
+            "position": {
+                "x": 1167.4,
+                "y": -41.80000000000001
+            },
+            "width": 703,
+            "height": 167,
+            "selected": false,
+            "positionAbsolute": {
+                "x": 1167.4,
+                "y": -41.80000000000001
+            },
+            "dragging": false
+        },
+        {
+            "id": "2625e4b1-8748-4451-8bcd-9ebab504a167",
+            "type": "agent",
+            "data": {
+                "agentID": "2625e4b1-8748-4451-8bcd-9ebab504a167",
+                "agentName": "File Agent",
+                "agentInstruction": "You are the File Agent that can read and write files. You work exclusively in the workspace directory, no where else. YOU ARE NOT ALLOWED TO CREATE FILES ANYWHERE BESIDES THE WORKSPACE DIRECTORY. If the user asks to write a report, follow their guidelines exactly. Do not deviate from the command, and for these reports on individuals, follow the following guidelines: what is their authority, some important quotes or things they have done, and more. Prep the notes so that they are usable for a potential meeting. Write all markdown to the /Markdown Files directory. If you cannot find it, call get filesindirectory and navigates",
+                "agentDescription": "responsbile for reading and writing files",
+                "agentTools": [
+                    "CreateFile",
+                    "OpenFile",
+                    "CreateDir",
+                    "GetFilesInDirectory"
+                ]
+            },
+            "position": {
+                "x": -351.7,
+                "y": -49.5000000000001
+            },
+            "width": 1376,
+            "height": 227,
+            "selected": true,
+            "positionAbsolute": {
+                "x": -351.7,
+                "y": -49.5000000000001
+            },
+            "dragging": false
         }
+    ],
+    "edges": [
+        {
+            "source": "d50783a8-d89d-4361-a576-a190187eee53",
+            "target": "2625e4b1-8748-4451-8bcd-9ebab504a167",
+            "id": "reactflow__edge-d50783a8-d89d-4361-a576-a190187eee53-2625e4b1-8748-4451-8bcd-9ebab504a167",
+            "markerEnd": {
+                "type": "arrowclosed"
+            },
+            "sourceHandle": null,
+            "targetHandle": null
+        },
+        {
+            "source": "2625e4b1-8748-4451-8bcd-9ebab504a167",
+            "target": "4c971443-b951-4466-b5df-92ec8f8299c2",
+            "id": "reactflow__edge-2625e4b1-8748-4451-8bcd-9ebab504a167-4c971443-b951-4466-b5df-92ec8f8299c2",
+            "markerEnd": {
+                "type": "arrowclosed"
+            },
+            "sourceHandle": null,
+            "targetHandle": null
+        }
+    ],
+    "viewport": {
+        "x": -164.72727272727275,
+        "y": 164.3181818181818,
+        "zoom": 0.9090909090909091
     }
-]
+}

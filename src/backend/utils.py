@@ -1,7 +1,9 @@
 from swarmtypes import *
 from context import Schema, Developer, Agent, ToolNameDict, User
+import json
+import asyncio
 
-def create_communication_schema(graph_data: GraphData) -> Schema:
+def create_communication_schema(graph_data: GraphData):
     schema = Schema()
 
     # Create a mapping of Pydantic node IDs to Node instances
@@ -23,7 +25,7 @@ def create_communication_schema(graph_data: GraphData) -> Schema:
                 description=agent_data.agentDescription,
                 functions=tools,
                 comm=schema
-            )
+            ).create_openai_agent()
         
         schema.add_node(node)
         node_mapping[pydantic_node.id] = node
@@ -45,7 +47,25 @@ def create_communication_schema(graph_data: GraphData) -> Schema:
 
     return schema, starting_node
 
-# test = GraphData(nodes=[Node(id='cba589cb-7fea-4c13-8da7-0bbd9c1386d6', type='agent', data=AgentData(agentID='cba589cb-7fea-4c13-8da7-0bbd9c1386d6', agentName='USER', agentInstruction='', agentDescription='', agentTools=[]), position=Position(x=161.89039563573806, y=-39.0), width=142, height=123, selected=False, positionAbsolute=Position(x=161.89039563573806, y=-39.0), dragging=False), Node(id='548960e7-879a-40ff-ae2a-dddfff1b9a89', type='agent', data=AgentData(agentID='548960e7-879a-40ff-ae2a-dddfff1b9a89', agentName='Research Agent', agentInstruction='You are the Research Agent, with the following purpose. Call the research methods and return information', agentDescription='Responsible for searching the web and pulling information', agentTools=['SearchWebDDGS']), position=Position(x=399.4602320447611, y=-27.2042005458797), width=356, height=231, selected=True, positionAbsolute=Position(x=399.4602320447611, y=-27.2042005458797), dragging=False), Node(id='5084cecf-9dca-4f09-bba0-b0ecf24b1ccb', type='agent', data=AgentData(agentID='5084cecf-9dca-4f09-bba0-b0ecf24b1ccb', agentName='Assistant Agent', agentInstruction='You are the Assistant Agent, with the following purpose. Communicate the plan and goal. If any Agent has any questions, please respond. Contextualize any plan provided to you. Keep this short and sweet.', agentDescription='responsible for communicating the project vision. After the goal is completed, this bot will end the chats', agentTools=[]), position=Position(x=625.8525948906218, y=-374.6111405331043), width=356, height=295, selected=False, positionAbsolute=Position(x=625.8525948906218, y=-374.6111405331043), dragging=False)], edges=[], viewport=Viewport(x=-115.83549360740253, y=218.52267141728862, zoom=0.5321850912266797))
 
+async def test():
+    with open('JsonFiles/swarm_data.json', 'r') as f:
+        data = json.loads(f.read())
+        test = GraphData(**data)
 
-# create_communication_schema(test).viz()
+        schmea, u = create_communication_schema(test)
+        async for m in  schmea.start(starting_node=u):
+            print(m)
+    
+def main():
+    import requests
+
+    url = "http://localhost:8000/stream/"
+
+    with requests.get(url, stream=True) as r:
+        for chunk in r.iter_content(None, decode_unicode=True):
+            if chunk:
+                print(chunk, end='', flush=True)
+    
+if __name__ == "__main__":
+    asyncio.run(test())

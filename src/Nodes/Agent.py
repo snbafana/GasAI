@@ -103,6 +103,7 @@ class Agent(Node):
         
         # Loop to continuously check and process the run's status
         while True:
+            print("running")
             # Await run completion if it's queued or still in progress
             while run.status in ['queued', 'in_progress']:
                 run = client.beta.threads.runs.retrieve(thread_id=self.threads[threadname].id, run_id=run.id)
@@ -216,7 +217,7 @@ class Agent(Node):
             role="user",
             content=message
         )
-        logging.debug(f"Message created with ID {message_creation_response.id} in thread '{threadname}'")
+        logging.info(f"Message created with ID {message_creation_response.id} in thread '{threadname}'")
 
         # Run the thread
         run_creation_response = client.beta.threads.runs.create(
@@ -226,7 +227,6 @@ class Agent(Node):
         logging.debug(f"Run created with ID {run_creation_response.id} in thread '{threadname}'")
 
         # Iterate through the responses from handle_completion
-        print("getting messages")
         async for m in self.handle_completion(message, run_creation_response, threadname):
             # print('time')
             if isinstance(m, tuple):

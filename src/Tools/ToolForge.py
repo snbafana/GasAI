@@ -199,6 +199,11 @@ class GetFilesInDirectory(OpenAISchema):
     dir_path:str = Field(..., description="the path to the directory that you want to look in")
     async def run(self):
         return str(os.listdir(self.dir_path))
+    
+class GetCurrentDirectory(OpenAISchema):
+    """Get all the files in the current directory"""
+    async def run(self):
+        return str(os.listdir())
   
 class OpenFile(OpenAISchema):
     """

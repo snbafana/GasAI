@@ -25,6 +25,7 @@ class Decider(Agent):
                         You operate in a groupchat that works toward the following purpose: {chat.description}
                         Based on the provided message, select the agent that makes the most sense for achieving the particular goal that you want to accomplish. 
                         The goal will be provided. If you want to get feedback on if you have achieved the goal, please ask the user, by not calling a function and waiting for feedback. 
+                        In your final message, answer the question that you were originally asked. In this final message, include all information possible 
                         Here are the following agents you can select from. Use the function calling EACH time to select the agent. 
                 
                         {stringlist}"""
@@ -191,13 +192,14 @@ class Splitter(Agent):
             return Splitter
         else:
             class Splitter(OpenAISchema):
-                """Take the input message and delegate the tasks among the output agents provided to you in the prompt. You do not need to give tasks to each agent. 
+                """Take the input message and delegate the tasks among the output agents provided to you in the prompt. Try to give tasks to each agent. Create only as many subgoals as there are agents. Do not go over. Be creative. 
                 Split the tasks according to their descriptions."""
                 chain_of_thought: str = Field(...,
                                             description="Think step by step to determine the correct recipients and "
                                                         "message.")
                 messages: list[str] = Field(...,
-                description="""A list of strings where each string is the corresponding message for the next agent. Each string's index should correspond to the recipient agent's id. Each string should be extremely information dense""")
+                description="""A list of strings where each string is the corresponding message for the next agent. Each string's index should correspond to the recipient agent's id. Each string should be extremely information dense""", 
+                max_items = len(out))
                 
                 rejoining:Literal['true', 'false'] = Field(..., description="true if the tasks will be rejoining one another after completion, false otherwise")
 
@@ -224,6 +226,7 @@ class Joiner(Agent):
         
         instructions=f"""You are the joiner agent, created in response to the tasks created by the splitter agent. Your role is to join a set of chat histories back together. 
         Maintain as much info as possible and as much specificity as possible. Do not lose any information. However, do not add any extra information. Only use what was provided to you
+        Keep all links intact, and keep all explanations of those links. Do not lose any information.
         """
         
         description="Joins content from multiple speakers"
@@ -240,6 +243,7 @@ class GoalMaker(Agent):
         self.name=name    
         
         instructions=f""" You are the Goal Creator agent. Your provide the shortest possible steps that the agent swarm needs to do in order to complete the user's request. Make your responses extremely short, and in number form
+        Then, paste any information from the user input, any necessary context. This should be as long as possible and as wholistic as possible. 
         """
         
         description="Creates a set of goals that need to be achieved"

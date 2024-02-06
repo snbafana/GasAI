@@ -80,10 +80,12 @@ dev_assistant:Assistant= Assistant(name='Assistant Agent',
                         functions=[])
 
 
-dev_team = Chat(actors=[dev_agent, dev_assistant, test_agent], name="Dev Team", description="To build and test code that works for the users needs. Make sure that all the code that is being created follows with the code in the files that the user provided")
+dev_team = Chat(actors=[dev_agent, dev_assistant, user], name="Dev Team", description="To build and test code that works for the users needs. Make sure that all the code that is being created follows with the code in the files that the user provided")
 
 prog_team = Chat(actors=[assistant, research_agent, file_agent], name="Research Team", description="Research and answer any of the users queries. These should be comprehensive. Provide links and sources for your work")
 
+
+randd = Chat(actors=[assistant, research_agent, file_agent, dev_agent, user], name="Research and Development Team", description="To build and test code that works for the users needs. Make sure that all the code that is being created follows with the code in the files that the user provided AND Research and answer any of the users queries. These should be comprehensive. Provide links and sources for your work")
 
 
 file_node = Assistant(name='File Agent', 
@@ -99,9 +101,11 @@ file_node = Assistant(name='File Agent',
 
 s, j = SplitJoinPair()
 
-user > s
-s > prog_team > j
-s > dev_team > j
-j > file_node
+# user > s
+# s > prog_team > j
+# s > dev_team > j
+# j > file_node
+
+user > randd
 
 comm.startup(starting_node=user)

@@ -11,6 +11,8 @@ import asyncio
 # Configure logging
 logger = logging.getLogger(__name__)
 
+# Chatmessage Output
+
 # Global dictionary to store tasks
 tasks = {}
 
@@ -181,6 +183,7 @@ class Schema:
         connected_nodes = self.get_connected_nodes(node)
   
         while connected_nodes != []:
+            # print("RUNNING")
             connected_nodes = self.get_connected_nodes(node)
             if isinstance(node, UtilityNode):
                 
@@ -188,15 +191,18 @@ class Schema:
                     
                     splitter = node.build_splitter(connected_nodes)
                     splittermsg = ""
+                    # print("STARTING SPLITTER")
                     async for s in splitter.get_completion(message, threadname=threadname):
                         print(s + '\n')
                         print('_'*15)
                         splittermsg = s
+                        
+                    # print("ENDED SPLITTER")
                                                     
                     active_generators = splitter.get_splitter_tasks()
                     gen_messages = ["" for i in active_generators]
                     final_nodes = []
-                    print("Generators: ", active_generators)
+                    # print("Generators: ", active_generators)
                     while active_generators:
                         for i, gen in enumerate(active_generators):
                             try:
@@ -205,7 +211,8 @@ class Schema:
                                     final_nodes.append(value)    
                                     pass
                                 else:
-                                    print(gen, " : ", value)
+                                    # print(gen, " : ", value)
+                                    print(value)
                                     print('_'*15)
                                     gen_messages[i] = value
                             except StopAsyncIteration:
@@ -218,7 +225,7 @@ class Schema:
 
                     message = f"""{message_content}"""
                     
-                    print('final nodes, ', final_nodes)
+                    # print('final nodes, ', final_nodes)
                     
                     node = final_nodes[0]
 
@@ -233,6 +240,8 @@ class Schema:
                     if connected_nodes != []:    
                         node =  connected_nodes[0]
                     else:
+                        print(message)
+                        return message
                         print("Completed ")
                     
             
@@ -245,6 +254,8 @@ class Schema:
                 if connected_nodes != []:    
                     node =  connected_nodes[0]
                 else:
+                    print(message)
+                    return message
                     print("Completed ")
 
     async def singular_system_pass(self, message, starting_node:Node, threadname='main', splitter_id=None):
@@ -293,7 +304,7 @@ class Schema:
         nx.draw(self.graph)
         plt.show()
         
-    def startup(self, starting_node:Node):
+    def startup(self, starting_node:Node, message=''):
         """
         Initiates the message processing in the network asynchronously.
 
@@ -302,5 +313,90 @@ class Schema:
 
         No return value. Initiates the asynchronous message processing.
         """
-        asyncio.run(self.system_pass(message="", starting_node=starting_node))
+        return asyncio.run(self.system_pass(message=message, starting_node=starting_node))
+
+    async def system_pass_gen(self, message, starting_node:Node, threadname='main'):
+           
+        """
+        Asynchronously processes a message through the network starting from a specific node.
+
+        Args:
+            message (str): The message to process.
+            starting_node (Node): The starting node for processing.
+            threadname (str): The name of the thread.
+
+        This method traverses the network from the starting node, processing the message
+        through each connected node. If auto-splitting is enabled and the node is a User node,
+        the message is split and processed accordingly.
+        """
+        node:Node = starting_node  
+        connected_nodes = self.get_connected_nodes(node)
+  
+        while connected_nodes != []:
+            connected_nodes = self.get_connected_nodes(node)
+            if isinstance(node, UtilityNode):
+                
+                if node.placetype == Splitter:
+                    
+                    splitter = node.build_splitter(connected_nodes)
+                    splittermsg = ""
+                    async for s in splitter.get_completion(message, threadname=threadname):
+                        yield s
+                        splittermsg = s
+                                                    
+                    active_generators = splitter.get_splitter_tasks()
+                    gen_messages = ["" for i in active_generators]
+                    final_nodes = []
+                    yield "Generators:  " + str(active_generators)
+                    while active_generators:
+                        for i, gen in enumerate(active_generators):
+                            try:
+                                value = await gen.__anext__()
+                                if isinstance(value, Node):
+                                    final_nodes.append(value)    
+                                    pass
+                                else:
+                                    yield value                                    
+                                    gen_messages[i] = value
+                            except StopAsyncIteration:
+                                
+                                active_generators.remove(gen)
+                                
+                    gen_messages_str = "\n".join(gen_messages)
+
+                    message_content = f"This is a summary of the history so far. Complete the requests mentioned in the information. Do whatever is necessary\n\n{message}\n\n{splittermsg}\n\n{gen_messages_str}"
+
+                    message = f"""{message_content}"""
+                    
+                    print('final nodes, ', final_nodes)
+                    
+                    node = final_nodes[0]
+
+                elif node.placetype == Joiner:
+                    
+                    joiner = node.build_joiner()
+                    async for s in joiner.get_completion(message, threadname=threadname):
+                        yield s
+                        message = s
+                    
+                    if connected_nodes != []:    
+                        node =  connected_nodes[0]
+                    else:
+                        yield "Completion"
+                    
+            
+            else:  
+                async for m in node.get_completion(message, threadname=threadname):
+                    yield m
+                    message = m
+                    
+                if connected_nodes != []:    
+                    node =  connected_nodes[0]
+                else:
+                    yield "Completion"
+
+    async def start(self, starting_node:Node):
+
+        async for message in self.system_pass_gen(starting_node=starting_node, message=""):
+            yield "data:" + message + "\n\n"
         
