@@ -1,10 +1,6 @@
-from Nodes.User import User
+from GasAI.Nodes import User, Node, Splitter, Joiner, Chat, UtilityNode
 import networkx as nx
 import matplotlib.pyplot as plt
-from Nodes.UtilityAgents import Splitter, Joiner
-from Nodes.Node import Node
-from Nodes.Chats import Chat, UtilityNode
-import itertools
 import logging
 import asyncio
 

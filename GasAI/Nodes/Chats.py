@@ -1,8 +1,7 @@
 
-from Nodes import User, Assistant
-from Nodes.UtilityAgents import Splitter, Joiner
+from .Node import User, Assistant
+from .UtilityAgents import Splitter, Joiner, Decider
 from .Node import Node
-from Nodes import Decider
 import asyncio
 import re
 from typing import Any, AsyncGenerator, Coroutine, List, Literal
