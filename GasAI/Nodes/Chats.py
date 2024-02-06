@@ -1,5 +1,6 @@
 
-from .Node import User, Assistant
+from .User import User
+from .Agent import Assistant
 from .UtilityAgents import Splitter, Joiner, Decider
 from .Node import Node
 import asyncio
