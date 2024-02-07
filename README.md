@@ -1,6 +1,6 @@
 # Welcome to Graph Async Swarm AI (GAS AI) 
 
-Currently, I have not setup the system as a python package. To play with the tools, git clone this repo and install the `requirements.txt` file into an environment of your choosing (`Conda`, `VirtualEnv`). Here is a conda example:
+Currently, I have not setup the system as a python package. To play with the tools, git clone this repo and install the `requirements.txt` file into an environment of your choosing (`Conda`, `VirtualEnv`). Here is a conda example. Or, use the Test Colab provided. 
 
 ```shell
 conda create --name gasai
