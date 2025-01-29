@@ -1,6 +1,6 @@
 # Welcome to Graph Async Swarm AI (GAS AI) 
 
-See the project demo here: https://youtu.be/VyzOhJB5668?si=iLsuFQalabbmkA8O
+See the project demo here: https://youtu.be/VyzOhJB5668?si=iLsuFQalabbmkA8O and for more information, please refer to the GAS AI pdf file in this repo.
 
 Currently, I have not setup the system as a python package. To play with the tools, git clone this repo and install the `requirements.txt` file into an environment of your choosing (`Conda`, `VirtualEnv`). Here is a conda example. Or, use the Test Colab provided. 
 
